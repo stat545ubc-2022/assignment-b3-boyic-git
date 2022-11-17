@@ -29,13 +29,40 @@ ui <- navbarPage("Canada Covid Dashboard",
                            value = c(min_week, max_week)),
                radioButtons("value", "Show value for: ",
                             choices = c("Confirmed Cases" = "c", 
-                                        "Deaths" = "d"),
+                                        "Deaths" = "d", 
+                                        "Both" = "b"),
                             selected = "c")
              ),
              
              # Show a plot of the generated distribution
              mainPanel(
                plotOutput("distPlot")
+             )
+           )
+  ),
+  tabPanel("Comparison",
+           titlePanel("Compare covid statistics within Canada"),
+           sidebarLayout(
+             sidebarPanel(
+               sliderInput("weeks0",
+                           "Range of dates:",
+                           min = min_week,
+                           max = max_week,
+                           value = c(min_week, max_week)),
+               radioButtons("value0", "Show value for: ",
+                            choices = c("Confirmed Cases" = "c", 
+                                        "Deaths" = "d", 
+                                        "Both" = "b"),
+                            selected = "c"),
+               checkboxGroupInput("provinces", label = "Choose provinces to compare:", 
+                                  choices = list("Canada" = 1, "Alberta" = 2, "British Columbia" = 3,
+                                                 "Ontario" = 4, "Quebec" = 5),
+                                  selected = c(1,2,3))
+             ),
+             
+             # Show a plot of the generated distribution
+             mainPanel(
+               plotOutput("distPlot0")
              )
            )
   ),
@@ -48,9 +75,10 @@ ui <- navbarPage("Canada Covid Dashboard",
                            min = min_week,
                            max = max_week,
                            value = c(min_week, max_week)),
-               radioButtons("value", "Show value for: ",
+               radioButtons("value1", "Show value for: ",
                             choices = c("Confirmed Cases" = "c", 
-                                        "Deaths" = "d"),
+                                        "Deaths" = "d", 
+                                        "Both" = "b"),
                             selected = "c")
              ),
              
@@ -69,9 +97,10 @@ ui <- navbarPage("Canada Covid Dashboard",
                            min = min_week,
                            max = max_week,
                            value = c(min_week, max_week)),
-               radioButtons("value", "Show value for: ",
+               radioButtons("value2", "Show value for: ",
                             choices = c("Confirmed Cases" = "c", 
-                                        "Deaths" = "d"),
+                                        "Deaths" = "d", 
+                                        "Both" = "b"),
                             selected = "c")
              ),
              
@@ -90,9 +119,10 @@ ui <- navbarPage("Canada Covid Dashboard",
                            min = min_week,
                            max = max_week,
                            value = c(min_week, max_week)),
-               radioButtons("value", "Show value for: ",
+               radioButtons("value3", "Show value for: ",
                             choices = c("Confirmed Cases" = "c", 
-                                        "Deaths" = "d"),
+                                        "Deaths" = "d", 
+                                        "Both" = "b"),
                             selected = "c")
              ),
              
@@ -111,9 +141,10 @@ ui <- navbarPage("Canada Covid Dashboard",
                            min = min_week,
                            max = max_week,
                            value = c(min_week, max_week)),
-               radioButtons("value", "Show value for: ",
+               radioButtons("value4", "Show value for: ",
                             choices = c("Confirmed Cases" = "c", 
-                                        "Deaths" = "d"),
+                                        "Deaths" = "d", 
+                                        "Both" = "b"),
                             selected = "c")
              ),
              
@@ -134,9 +165,10 @@ ui <- navbarPage("Canada Covid Dashboard",
                                       min = min_week,
                                       max = max_week,
                                       value = c(min_week, max_week)),
-                          radioButtons("value", "Show value for: ",
+                          radioButtons("value5", "Show value for: ",
                                        choices = c("Confirmed Cases" = "c", 
-                                                   "Deaths" = "d"),
+                                                   "Deaths" = "d", 
+                                                   "Both" = "b"),
                                        selected = "c")
                         ),
                         
@@ -204,20 +236,194 @@ server <- function(input, output, clientData, session) {
       }
     })
   
+    # Canada plot
     output$distPlot <- renderPlot({
         # generate weeks based on input$weeks from ui.R
         if (input$value == "c") {
           data %>% 
             filter(prname == "Canada") %>%
+            filter(date >= input$weeks[1] & date <= input$weeks[2]) %>%
             ggplot(aes(x = date, y = totalcases)) + 
             geom_line()
-            
+        } else if (input$value == "d") {
+          data %>% 
+            filter(prname == "Canada") %>%
+            filter(date >= input$weeks[1] & date <= input$weeks[2]) %>%
+            ggplot(aes(x = date, y = numdeaths)) + 
+            geom_line()
+        } else if (input$value == "b") {
+          data %>% 
+            filter(prname == "Canada") %>%
+            filter(date >= input$weeks[1] & date <= input$weeks[2]) %>% 
+            pivot_longer(cols=c("totalcases", "numdeaths"),
+                         names_to = "status",
+                         values_to = "value") %>%
+            ggplot(aes(x = date, y = value, color=status)) +
+            geom_line()
         }
-
-        # draw the histogram with the specified Range of dates
-        # hist(x, breaks = weeks, col = 'darkgray', border = 'white',
-        #      xlab = 'Waiting time to next eruption (in mins)',
-        #      main = 'Histogram of waiting times')
+    })
+    
+    # Comparison 
+    # Manitoba plot
+    output$distPlot0 <- renderPlot({
+      # generate weeks based on input$weeks from ui.R
+      if (input$value0 == "c") {
+        data %>% 
+          filter(prname %in% input$provinces) %>%
+          filter(date >= input$weeks0[1] & date <= input$weeks0[2]) %>%
+          ggplot(aes(x = date, y = totalcases)) + 
+          geom_line()
+      } else if (input$value5 == "d") {
+        data %>% 
+          filter(prname %in% input$provinces) %>%
+          filter(date >= input$weeks0[1] & date <= input$weeks0[2]) %>%
+          ggplot(aes(x = date, y = numdeaths)) + 
+          geom_line()
+      } else if (input$value5 == "b") {
+        data %>% 
+          filter(prname %in% input$provinces) %>%
+          filter(date >= input$weeks0[1] & date <= input$weeks0[2]) %>% 
+          pivot_longer(cols=c("totalcases", "numdeaths"),
+                       names_to = "status",
+                       values_to = "value") %>%
+          ggplot(aes(x = date, y = value, color=status)) +
+          geom_line()
+      }
+    })
+    
+    # Alberta plot
+    output$distPlot1 <- renderPlot({
+      # generate weeks based on input$weeks from ui.R
+      if (input$value1 == "c") {
+        data %>% 
+          filter(prname == "Alberta") %>%
+          filter(date >= input$weeks1[1] & date <= input$weeks1[2]) %>%
+          ggplot(aes(x = date, y = totalcases)) + 
+          geom_line()
+      } else if (input$value1 == "d") {
+        data %>% 
+          filter(prname == "Alberta") %>%
+          filter(date >= input$weeks1[1] & date <= input$weeks1[2]) %>%
+          ggplot(aes(x = date, y = numdeaths)) + 
+          geom_line()
+      } else if (input$value1 == "b") {
+        data %>% 
+          filter(prname == "Alberta") %>%
+          filter(date >= input$weeks1[1] & date <= input$weeks1[2]) %>% 
+          pivot_longer(cols=c("totalcases", "numdeaths"),
+                       names_to = "status",
+                       values_to = "value") %>%
+          ggplot(aes(x = date, y = value, color=status)) +
+          geom_line()
+      }
+    })
+    
+    # British Columbia plot
+    output$distPlot2 <- renderPlot({
+      # generate weeks based on input$weeks from ui.R
+      if (input$value2 == "c") {
+        data %>% 
+          filter(prname == "British Columbia") %>%
+          filter(date >= input$weeks2[1] & date <= input$weeks2[2]) %>%
+          ggplot(aes(x = date, y = totalcases)) + 
+          geom_line()
+      } else if (input$value2 == "d") {
+        data %>% 
+          filter(prname == "British Columbia") %>%
+          filter(date >= input$weeks2[1] & date <= input$weeks2[2]) %>%
+          ggplot(aes(x = date, y = numdeaths)) + 
+          geom_line()
+      } else if (input$value2 == "b") {
+        data %>% 
+          filter(prname == "British Columbia") %>%
+          filter(date >= input$weeks2[1] & date <= input$weeks2[2]) %>% 
+          pivot_longer(cols=c("totalcases", "numdeaths"),
+                       names_to = "status",
+                       values_to = "value") %>%
+          ggplot(aes(x = date, y = value, color=status)) +
+          geom_line()
+      }
+    })
+    
+    # Ontario plot
+    output$distPlot3 <- renderPlot({
+      # generate weeks based on input$weeks from ui.R
+      if (input$value3 == "c") {
+        data %>% 
+          filter(prname == "Ontario") %>%
+          filter(date >= input$weeks3[1] & date <= input$weeks3[2]) %>%
+          ggplot(aes(x = date, y = totalcases)) + 
+          geom_line()
+      } else if (input$value3 == "d") {
+        data %>% 
+          filter(prname == "Ontario") %>%
+          filter(date >= input$weeks3[1] & date <= input$weeks3[2]) %>%
+          ggplot(aes(x = date, y = numdeaths)) + 
+          geom_line()
+      } else if (input$value3 == "b") {
+        data %>% 
+          filter(prname == "Ontario") %>%
+          filter(date >= input$weeks3[1] & date <= input$weeks3[2]) %>% 
+          pivot_longer(cols=c("totalcases", "numdeaths"),
+                       names_to = "status",
+                       values_to = "value") %>%
+          ggplot(aes(x = date, y = value, color=status)) +
+          geom_line()
+      }
+    })
+    
+    # Quebec plot
+    output$distPlot4 <- renderPlot({
+      # generate weeks based on input$weeks from ui.R
+      if (input$value4 == "c") {
+        data %>% 
+          filter(prname == "Quebec") %>%
+          filter(date >= input$weeks4[1] & date <= input$weeks4[2]) %>%
+          ggplot(aes(x = date, y = totalcases)) + 
+          geom_line()
+      } else if (input$value4 == "d") {
+        data %>% 
+          filter(prname == "Quebec") %>%
+          filter(date >= input$weeks4[1] & date <= input$weeks4[2]) %>%
+          ggplot(aes(x = date, y = numdeaths)) + 
+          geom_line()
+      } else if (input$value4 == "b") {
+        data %>% 
+          filter(prname == "Quebec") %>%
+          filter(date >= input$weeks4[1] & date <= input$weeks4[2]) %>% 
+          pivot_longer(cols=c("totalcases", "numdeaths"),
+                       names_to = "status",
+                       values_to = "value") %>%
+          ggplot(aes(x = date, y = value, color=status)) +
+          geom_line()
+      }
+    })
+    
+    # Manitoba plot
+    output$distPlot5 <- renderPlot({
+      # generate weeks based on input$weeks from ui.R
+      if (input$value5 == "c") {
+        data %>% 
+          filter(prname == "Manitoba") %>%
+          filter(date >= input$weeks5[1] & date <= input$weeks5[2]) %>%
+          ggplot(aes(x = date, y = totalcases)) + 
+          geom_line()
+      } else if (input$value5 == "d") {
+        data %>% 
+          filter(prname == "Manitoba") %>%
+          filter(date >= input$weeks5[1] & date <= input$weeks5[2]) %>%
+          ggplot(aes(x = date, y = numdeaths)) + 
+          geom_line()
+      } else if (input$value5 == "b") {
+        data %>% 
+          filter(prname == "Manitoba") %>%
+          filter(date >= input$weeks5[1] & date <= input$weeks5[2]) %>% 
+          pivot_longer(cols=c("totalcases", "numdeaths"),
+                       names_to = "status",
+                       values_to = "value") %>%
+          ggplot(aes(x = date, y = value, color=status)) +
+          geom_line()
+      }
     })
 }
 
