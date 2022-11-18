@@ -10,6 +10,7 @@
 library(shiny)
 library(tidyverse)
 
+# global variables
 data <- read_csv("covid19-download.csv")
 min_week <- min(data$date)
 max_week <- max(data$date)
@@ -17,11 +18,15 @@ sliderRange <- reactiveValues(r = c(min_week, max_week))
 value <- reactiveValues(s = "c") # c for confirmed cases and d for deaths
 
 ui <- navbarPage("Canada Covid Dashboard",
-  # demonstration of navbar and tab features
+  # demonstration of navbar and tab features:
+  # navbar and tabs make the app pages organized
   tabPanel("Comparison",
            titlePanel("Compare covid statistics within Canada"),
            sidebarLayout(
              sidebarPanel(
+               # demonstration of slider feature for user to select a range of 
+               # date for plots. User can focus on specific range of dates for 
+               # the covid cases
                sliderInput("weeks0",
                            "Range of dates:",
                            min = min_week,
@@ -31,6 +36,10 @@ ui <- navbarPage("Canada Covid Dashboard",
                             choices = c("Confirmed Cases" = "c", 
                                         "Deaths" = "d"),
                             selected = "c"),
+               
+               # demonstration of check box feature for user to select one or more
+               # provinces for comparison. User can compare multiple the data in
+               # multiple provinces
                checkboxGroupInput("provinces", label = "Choose provinces to compare:", 
                                   choices = list("Canada",
                                                  "Alberta", 
@@ -52,6 +61,8 @@ ui <- navbarPage("Canada Covid Dashboard",
              )
            )
   ),
+  
+  # Canada page
   tabPanel("Canada",
            titlePanel("Canada covid statistics"),
            sidebarLayout(
@@ -74,6 +85,8 @@ ui <- navbarPage("Canada Covid Dashboard",
              )
            )
   ),
+  
+  # Alberta page
   tabPanel("Alberta",
            titlePanel("Alberta covid statistics"),
            sidebarLayout(
@@ -96,6 +109,8 @@ ui <- navbarPage("Canada Covid Dashboard",
              )
            )
   ),
+  
+  # British Columbia page
   tabPanel("British Columbia",
            titlePanel("British Columbia covid statistics"),
            sidebarLayout(
@@ -118,6 +133,8 @@ ui <- navbarPage("Canada Covid Dashboard",
              )
            )
   ),
+  
+  # Ontario page
   tabPanel("Ontario",
            titlePanel("Ontario covid statistics"),
            sidebarLayout(
@@ -140,6 +157,8 @@ ui <- navbarPage("Canada Covid Dashboard",
              )
            )
   ),
+  
+  # Quebec page
   tabPanel("Quebec",
            titlePanel("Quebec covid statistics"),
            sidebarLayout(
@@ -162,6 +181,8 @@ ui <- navbarPage("Canada Covid Dashboard",
              )
            )
   ),
+  
+  # More provinces in a navbar menue feature
   navbarMenu("More",
              # only 1 tab is implemented for demonstration of navbar menu feature
              tabPanel("Manitoba",
@@ -224,8 +245,7 @@ ui <- navbarPage("Canada Covid Dashboard",
 # Define server logic required to draw a histogram
 server <- function(input, output, clientData, session) {
     observe({
-      ## sync the slider for all provinces (same as canada)
-      ## demonstration of reactive values 
+      ## sync the slider for all provinces (same as the choices in Canada page)
       if (!all(sliderRange$r %in% input$weeks)) {
         updateSliderInput(session, "weeks1", value=input$weeks)
         updateSliderInput(session, "weeks2", value=input$weeks)
@@ -245,6 +265,8 @@ server <- function(input, output, clientData, session) {
     })
   
   # Comparison 
+  # demonstration of plot features. User can visually compare the data in different
+  # provinces
   output$distPlot0 <- renderPlot({
     if (input$value0 == "c") {
       data %>% 
