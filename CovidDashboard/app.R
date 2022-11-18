@@ -183,7 +183,7 @@ ui <- navbarPage("Canada Covid Dashboard",
   ),
   
   # More provinces in a navbar menue feature
-  navbarMenu("More",
+  navbarMenu("More Provinces",
              # only 1 tab is implemented for demonstration of navbar menu feature
              tabPanel("Manitoba",
                       titlePanel("Manitoba covid statistics"),
@@ -274,7 +274,7 @@ server <- function(input, output, clientData, session) {
         filter(date >= input$weeks0[1] & date <= input$weeks0[2]) %>%
         ggplot(aes(x = date, y = totalcases, color = prname)) + 
         geom_line(size = 1)
-    } else if (input$value5 == "d") {
+    } else if (input$value0 == "d") {
       data %>% 
         filter(prname %in% input$provinces) %>%
         filter(date >= input$weeks0[1] & date <= input$weeks0[2]) %>%
