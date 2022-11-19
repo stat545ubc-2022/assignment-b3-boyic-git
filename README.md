@@ -1,6 +1,7 @@
 # Canada Covid Dashboard App
 
-## Link to my Shiny app: [https://boyic.shinyapps.io/coviddashboard/](https://boyic.shinyapps.io/coviddashboard/)
+## Link to my Shiny app: 
+[https://boyic.shinyapps.io/coviddashboard/](https://boyic.shinyapps.io/coviddashboard/)
 
 ## My choice of assignment: 
 Option B - my Canada Covid Dashboard app
