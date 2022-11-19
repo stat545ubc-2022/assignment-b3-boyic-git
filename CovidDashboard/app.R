@@ -18,12 +18,14 @@ sliderRange <- reactiveValues(r = c(min_week, max_week))
 value <- reactiveValues(s = "c") # c for confirmed cases and d for deaths
 
 ui <- navbarPage("Canada Covid Dashboard",
+  # Feature 1: navbar and tab
   # demonstration of navbar and tab features:
   # navbar and tabs make the app pages organized
   tabPanel("Comparison",
            titlePanel("Compare covid statistics within Canada"),
            sidebarLayout(
              sidebarPanel(
+               # Feature 2: slider
                # demonstration of slider feature for user to select a range of 
                # date for plots. User can focus on specific range of dates for 
                # the covid cases
@@ -37,6 +39,7 @@ ui <- navbarPage("Canada Covid Dashboard",
                                         "Deaths" = "d"),
                             selected = "c"),
                
+               # Feature 3: check box
                # demonstration of check box feature for user to select one or more
                # provinces for comparison. User can compare multiple the data in
                # multiple provinces
@@ -182,7 +185,8 @@ ui <- navbarPage("Canada Covid Dashboard",
            )
   ),
   
-  # More provinces in a navbar menue feature
+  # Feature 4: navbar menu
+  # More provinces in a navbar menu feature
   navbarMenu("More Provinces",
              # only 1 tab is implemented for demonstration of navbar menu feature
              tabPanel("Manitoba",
@@ -265,6 +269,7 @@ server <- function(input, output, clientData, session) {
     })
   
   # Comparison 
+  # Feature 5: plots
   # demonstration of plot features. User can visually compare the data in different
   # provinces
   output$distPlot0 <- renderPlot({
