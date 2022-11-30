@@ -13,6 +13,12 @@ This is a dashboard app to plot the covid confirmed cases and deaths in province
 - Canada/province statistics page: user can plot the number of confirmed case or/and deaths within a specific user-defined date range.
 - Data download: user can preview and download the dataset used in this app.
 
+## Dependencies:
+- `shiny`
+- `tidyverse`
+- `DT`
+- `rsconnect` to deploy the app
+
 ## Features: 
 I have showcased more than 3 required features in my app. These features have also been explained in my code.
 0. Download dataset when the app is starting up
@@ -34,3 +40,7 @@ v1.1.0:
 - added a drop menu to group the province in a single navbar tab
 - added data download and display in a new navbar tab
 - reordered the navbar tab to make more senses for users
+
+## Feedback from Friends:
+Friend 1: V1.1.0 is better. The collapsed menu makes the app more organized. User can choose what they want to see. It is pretty straightforward to use. (my reply: indeed, the code is also more efficient because there is no more duplicated code for each tab.)
+Friend 2: V1.1.0 is better. V1.0.0 looks not very professional. 
