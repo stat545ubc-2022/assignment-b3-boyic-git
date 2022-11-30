@@ -1,7 +1,7 @@
 # Canada Covid Dashboard App
 
 ## Link to my Shiny app: 
-[version 1.0.0](https://boyic.shinyapps.io/coviddashboard/)
+[version 1.0.0](https://boyic.shinyapps.io/coviddashboard/)  
 [version 1.1.0](https://boyic2.shinyapps.io/coviddashboard/) 
 
 ## My choice of assignment: 
