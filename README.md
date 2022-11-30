@@ -42,5 +42,5 @@ v1.1.0:
 - reordered the navbar tab to make more senses for users
 
 ## Feedback from Friends:
-Friend 1: V1.1.0 is better. The collapsed menu makes the app more organized. User can choose what they want to see. It is pretty straightforward to use. (my reply: indeed, the code is also more efficient because there is no more duplicated code for each tab.)
+Friend 1: V1.1.0 is better. The collapsed menu makes the app more organized. User can choose what they want to see. It is pretty straightforward to use. (my reply: indeed, the code is also more efficient because there is no more duplicated code for each tab.)  
 Friend 2: V1.1.0 is better. V1.0.0 looks not very professional. 
